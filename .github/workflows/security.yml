@@ -42,6 +42,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           ~/sonar-scanner-cli/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner \
+          -X \
           -Dsonar.projectKey=mahalekiran_vulnado \
           -Dsonar.sources=. \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
