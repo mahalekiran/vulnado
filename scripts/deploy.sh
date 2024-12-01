@@ -7,10 +7,12 @@ INSTANCE_TYPE="t3.medium"
 KEY_NAME="KiranM"  # Replace with your AWS Key Pair name
 SECURITY_GROUP="sg-009b280c0ea3f798a"  # Replace with your Security Group ID
 SUBNET_ID="subnet-0b4e5fded37cec9d4"  # Replace with your Subnet ID
+INSTANCE_NAME= "KiranM_EC2_Deployment"
 
 # Launch EC2 instance
 INSTANCE_ID=$(aws ec2 run-instances \
     --region $AWS_REGION \
+    --tag "Key=Name,Value=$INSTANCE_NAME" \
     --image-id $AMI_ID \
     --instance-type $INSTANCE_TYPE \
     --key-name $KEY_NAME \
