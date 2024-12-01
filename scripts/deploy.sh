@@ -13,6 +13,9 @@ INSTANCE_NAME="KiranM_EC2_Deployment"
 if ! command -v aws &>/dev/null; then
     echo "AWS CLI is not installed. Attempting to install it..."
     
+    apt-get update
+    apt-get install -y sudo
+
     # Install unzip if missing
     if ! command -v unzip &>/dev/null; then
         echo "Installing unzip..."
