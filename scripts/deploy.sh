@@ -16,7 +16,7 @@ if ! command -v aws &>/dev/null; then
     # Install unzip if missing
     if ! command -v unzip &>/dev/null; then
         echo "Installing unzip..."
-        apt-get update && apt-get install -y unzip || {
+        sudo apt-get update && sudo apt-get install -y unzip || {
             echo "Failed to install unzip. Exiting."
             exit 1
         }
@@ -28,7 +28,7 @@ if ! command -v aws &>/dev/null; then
         exit 1
     }
     unzip awscliv2.zip
-    ./aws/install --bin-dir ~/bin --install-dir ~/aws-cli --update || {
+    sudo ./aws/install --bin-dir ~/bin --install-dir ~/aws-cli --update || {
         echo "Failed to install AWS CLI. Exiting."
         exit 1
     }
@@ -78,7 +78,7 @@ ssh -o StrictHostKeyChecking=no -i "/path/to/$KEY_NAME.pem" ubuntu@$INSTANCE_PUB
     # Update and install dependencies
     if ! command -v sudo &>/dev/null; then
         echo "Installing sudo..."
-        apt-get update && apt-get install -y sudo || exit 1
+        sudo apt-get update && sudo apt-get install -y sudo || exit 1
     fi
 
     sudo apt update -y
