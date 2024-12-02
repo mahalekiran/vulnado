@@ -12,22 +12,25 @@ INSTANCE_NAME="KiranM_EC2_Deployment"
 # Check and install AWS CLI if not present
 if ! command -v aws &>/dev/null; then
     echo "AWS CLI is not installed. Attempting to install it..."
-    
-    apt-get update
-    apt-get install -y sudo
 
     # Install unzip if missing
     if ! command -v unzip &>/dev/null; then
         echo "Installing unzip..."
-        sudo apt-get update 
-        sudo apt-get install -y unzip
+        yum install -y unzip || {
+            echo "Failed to install unzip. Exiting."
+            exit 1
+        }
     fi
 
     # Download and install AWS CLI
-    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    sudo unzip awscliv2.zip
-    sudo ./aws/install --bin-dir ~/bin --install-dir ~/aws-cli --update || {
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" || {
+        echo "Failed to download AWS CLI. Exiting."
+        exit 1
+    }
+    unzip awscliv2.zip
+    ./aws/install --bin-dir ~/bin --install-dir ~/aws-cli --update || {
         echo "Failed to install AWS CLI. Exiting."
+        exit 1
     }
     export PATH=~/bin:$PATH
     echo "AWS CLI installed successfully."
@@ -69,27 +72,22 @@ fi
 
 echo "EC2 Instance Public IP: $INSTANCE_PUBLIC_IP"
 
-# SSH into the EC2 instance and deploy the application
-echo "Deploying application to EC2 instance..."
-ssh -o StrictHostKeyChecking=no -i "/path/to/$KEY_NAME.pem" ubuntu@$INSTANCE_PUBLIC_IP <<EOF
-    # Update and install dependencies
-    if ! command -v sudo &>/dev/null; then
-        echo "Installing sudo..."
-        sudo apt-get update && sudo apt-get install -y sudo || exit 1
-    fi
+# # SSH into the EC2 instance and deploy the application
+# echo "Deploying application to EC2 instance..."
+# ssh -o StrictHostKeyChecking=no -i "/path/to/$KEY_NAME.pem" ubuntu@$INSTANCE_PUBLIC_IP <<EOF
+#     # Update and install dependencies
+#     apt update -y
+#     apt install -y openjdk-8-jdk git maven
 
-    sudo apt update -y
-    sudo apt install -y openjdk-8-jdk git maven
+#     # Clone the Vulnado repository and checkout the 'develop' branch
+#     git clone --branch develop https://github.com/mahalekiran/vulnado.git /home/ubuntu/vulnado
+#     cd /home/ubuntu/vulnado
 
-    # Clone the Vulnado repository and checkout the 'develop' branch
-    git clone --branch develop https://github.com/mahalekiran/vulnado.git /home/ubuntu/vulnado
-    cd /home/ubuntu/vulnado
+#     # Build the application
+#     mvn clean install
 
-    # Build the application
-    mvn clean install
+#     # Run the application
+#     java -jar target/vulnado.jar &
+# EOF
 
-    # Run the application
-    java -jar target/vulnado.jar &
-EOF
-
-echo "Application deployed successfully to EC2 instance: $INSTANCE_PUBLIC_IP"
+# echo "Application deployed successfully to EC2 instance: $INSTANCE_PUBLIC_IP"
