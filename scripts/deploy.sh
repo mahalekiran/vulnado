@@ -5,7 +5,7 @@ set -e
 
 export PATH=$PATH:/usr/local/bin
 
-if ! command -v aws &>/dev/null; then
+if ! /usr/local/bin/aws --version &>/dev/null; then
     echo "AWS CLI is not installed. Please install it and configure AWS credentials."
     exit 1
 fi
@@ -19,6 +19,7 @@ KEY_NAME="KiranM"
 SECURITY_GROUP="sg-009b280c0ea3f798a"
 SUBNET_ID="subnet-0b4e5fded37cec9d4"
 INSTANCE_NAME="KiranM_EC2_Deployment"
+SSH_KEY_ID = 'ec2-ssh-key'
 
 
 # Launch EC2 instance
@@ -52,7 +53,7 @@ echo "EC2 Instance Public IP: $INSTANCE_PUBLIC_IP"
 
 # SSH into the EC2 instance and deploy the application
 echo "Deploying application to EC2 instance..."
-ssh -o StrictHostKeyChecking=no -i "/path/to/$KEY_NAME.pem" ubuntu@$INSTANCE_PUBLIC_IP <<EOF
+ssh -o StrictHostKeyChecking=no -i "$SSH_KEY_PATH" ubuntu@$INSTANCE_PUBLIC_IP << 'EOF'
     # Update and install dependencies
     sudo apt update && sudo apt upgrade -y
     sudo apt install -y openjdk-8-jdk git maven
