@@ -3,6 +3,14 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+export PATH=$PATH:/usr/local/bin
+
+if ! command -v aws &>/dev/null; then
+    echo "AWS CLI is not installed. Please install it and configure AWS credentials."
+    exit 1
+fi
+
+
 # AWS Region and Instance Parameters
 AWS_REGION="ap-northeast-3"
 AMI_ID="ami-05f4d8898209c4f55" 
